@@ -30,15 +30,6 @@ ggplot(df_world_small, aes(x = gdppcap08)) +
   theme(plot.title = element_text(hjust = 0.5)) 
 ggsave('gdppcap08.png') 
 
-#pl <- ggplot(df_world_small, aes(x = gdppcap08, fill = region)) +
-#  geom_histogram(binwidth = 1000) +
-#  facet_grid(~region) + 
-#  labs(title = "GDP per Capita in 2008", x = "GDP per Capita", y = "Frequency") +
-#  theme_bw() + 
-#  theme(plot.title = element_text(hjust = 0.5)) 
-
-#print(pl)
-
 # ii
 ggplot(df_world_small, aes(y = polityIV)) + 
        geom_boxplot() +
@@ -60,10 +51,16 @@ ggplot(df_world_small, aes(y = polityIV, x = region)) +
         axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) 
 ggsave('polityiv-per-region.png') 
 
+# iii
+region_biggest_gdpcap08 <- df_world_small[which.max(df_world_small$gdppcap08), "region"]
+print(region_biggest_gdpcap08)
 
+# iv
+country_with_min_polityiv <- df_world_small[which.min(df_world_small$polityIV), "country"]
+countries_with_min_polityiv <- df_world_small[df_world_small$polityIV == min(df_world_small$polityIV), "country"]
 
-# - iii. Identify the region that has highest gdpcap.
-# - iv. Which country has lowest polityIV?
+print(country_with_min_polityiv)
+print(countries_with_min_polityiv)
 
 # c
 pets_text <- "Pet Number_of_people
@@ -74,21 +71,18 @@ pets_text <- "Pet Number_of_people
 
 df_pets <- read.table(text = pets_text, header = TRUE)
 
-pl <- ggplot(data = df_pets, aes(x = Pet, y = Number_of_people)) + 
+ggplot(data = df_pets, aes(x ="" , y = Number_of_people, fill = Pet)) +
+  geom_bar(stat = "identity", width = 1) +
+  coord_polar("y", start=0) +
+  labs(title = "Pet Lovers Pie Chart") +
+  theme_bw() + 
+  theme_void() +
+  theme(plot.title = element_text(hjust = 0.5))
+ggsave('pets-pie.png') 
+
+ggplot(data = df_pets, aes(x = Pet, y = Number_of_people)) + 
    geom_bar(stat = "identity") +
    labs(title = "Pet Lovers Bar Chart", x = "Pet", y = "Number of People") +
    theme_bw() +
    theme(plot.title = element_text(hjust = 0.5))
-   
-  
-pl2 <- ggplot(data = df_pets, aes(x ="" , y = Number_of_people, fill = Pet)) +
-   geom_bar(stat = "identity", width = 1) +
-   coord_polar("y", start=0) +
-   labs(title = "Pet Lovers Pie Chart") +
-   theme_bw() + 
-   theme_void() +
-   theme(plot.title = element_text(hjust = 0.5))
-
-
-print(pl)
-print(pl2)
+ggsave('pets-bar.png') 

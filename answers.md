@@ -435,10 +435,49 @@ Output
 ![Polity Per Region Box Plot](polityiv-per-region.png)
 
 ##### iii.
-iii. Identify the region that has highest gdpcap. 
+To find the region with the biggest GDP per Capita we need to do the following
+- 1. we need to find the maximum value and the corresponding index `which.max(df_world_small$gdppcap08)`
+- 2. select the row `df_world_small[which.max(df_world_small$gdppcap08), ]`
+- 3. filter the column region `df_world_small[which.max(df_world_small$gdppcap08), "region"]`
+
+
+Input
+```
+region_biggest_gdpcap08 <- df_world_small[which.max(df_world_small$gdppcap08), "region"]
+print(region_biggest_gdpcap08)
+```
+Output
+```
+[1] "Middle East"
+```
 
 ##### iv.
-iv. Which country has lowest polityIV ?
+To find the country with the lowest polityIV Index we need to do the following steps:
+- 1. we need to find the minimum polityIV value and the corresponding index `which.min(df_world_small$polityIV)`
+- 2. select the row `df_world_small[which.min(df_world_small$polityIV), ]`
+- 3. filter the column country `df_world_small[which.min(df_world_small$polityIV), "country"]`
+
+To find *all* the countries with the lowest polityIV Index we need to do the following steps:
+- 1. we need to find the minimum polityIV value `min(df_world_small$polityIV)`
+- 2. filter all the values corresponding to the value `df_world_small$polityIV == min(df_world_small$polityIV)`
+- 3. select the corresponding rows `df_world_small[df_world_small$polityIV == min(df_world_small$polityIV), ]`
+- 4. filter the column country `df_world_small[df_world_small$polityIV == min(df_world_small$polityIV), "country"]`
+
+Input
+```
+country_with_min_polityiv <- df_world_small[which.min(df_world_small$polityIV), "country"]
+countries_with_min_polityiv <- df_world_small[df_world_small$polityIV == min(df_world_small$polityIV), "country"]
+
+print(country_with_min_polityiv)
+print(countries_with_min_polityiv)
+```
+Output
+```
+[1] "Qatar"
+[1] "Qatar"        "Saudi Arabia"
+```
+
+
 
 ### Question C
 c. Table 1 represents people in Dublin who like to own 
@@ -455,15 +494,45 @@ Table 1: Pet Lovers
 
 - i. Plot the most suitable graph for the given dataset.
 - ii. Is it a good idea to choose a pie chart (in case 
- you have not chosen it in (i))? Why is it a good idea or why is it not a good idea?
+ you have not chosen it in (i))? Why is it a good idea or why 
+ is it not a good idea?
 
 #### Answer C 
 
 ##### i.
-
+![Pets Pie Plot](pets-bar.png)
 
 ##### ii.
+![Pets Pie Plot](pets-pie.png)
 
-i. The most suitable graph for the given dataset is a bar graph. A bar graph allows for easy comparison of the number of people who like each type of pet.
+Looking at the pie chart of pets, I find it challenging to 
+discern and compare the number of individuals who favor each type
+of pet. In my opinion, a pie chart is more effective for 
+representing proportions rather than absolute values.
 
-ii. No, it is not a good idea to choose a pie chart for this dataset. Pie charts are typically used to represent parts of a whole, where each part represents a proportion of the entire dataset. In this case, the number of people who like each type of pet is not directly proportional to the whole dataset, making a pie chart less suitable. Additionally, comparing the absolute values of the number of people who like each type of pet is more intuitive with a bar graph than with a pie chart.
+Input for Question C
+``` 
+pets_text <- "Pet Number_of_people
+              Dogs	2034
+              Cats	492
+              Fish	785
+              Macaw	298"
+
+df_pets <- read.table(text = pets_text, header = TRUE)
+
+ggplot(data = df_pets, aes(x ="" , y = Number_of_people, fill = Pet)) +
+  geom_bar(stat = "identity", width = 1) +
+  coord_polar("y", start=0) +
+  labs(title = "Pet Lovers Pie Chart") +
+  theme_bw() + 
+  theme_void() +
+  theme(plot.title = element_text(hjust = 0.5))
+ggsave('pets-pie.png') 
+
+ggplot(data = df_pets, aes(x = Pet, y = Number_of_people)) + 
+   geom_bar(stat = "identity") +
+   labs(title = "Pet Lovers Bar Chart", x = "Pet", y = "Number of People") +
+   theme_bw() +
+   theme(plot.title = element_text(hjust = 0.5))
+ggsave('pets-bar.png') 
+```

@@ -2,13 +2,13 @@
 title: "MATH 9102 - Probability and Statistical Inference Assignment - 1"
 author: "Antonio Silva (D23129331@mytudublin.ie)"
 output:
-  pdf_document:
-    toc: true
-    toc_depth: '2'
   html_document:
     toc: true
     toc_depth: 2
     mathjax: "https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"
+  pdf_document:
+    toc: true
+    toc_depth: '2'
 ---
 
 ```{r, echo = TRUE, results = "hide"}
@@ -330,32 +330,21 @@ Load the provided `world-small.csv` file. (2 marks)
 
 ### Answer 
 
-#### i
+#### i {#bi}
 
 ```{r gdppcap08-plot, dev='png'}
 df_world_small <- read.csv("data/world-small.csv", header = TRUE)
 
-ggplot(df_world_small, aes(x = gdppcap08)) +
+ggplot(df_world_small, aes(x = gdppcap08, fill = region)) +
 geom_histogram(binwidth = 1000) +
 labs(title = "GDP per Capita in 2008", x = "GDP per Capita", y = "Frequency") +
 theme_bw() +
 theme(plot.title = element_text(hjust = 0.5))
 ```
 
-#### ii
-
-```{r politiv-plot, dev='png'}
-ggplot(df_world_small, aes(y = polityIV)) +
-  geom_boxplot() +
-  labs(title = "Polity IV Scores Chart", x = "", y = "Polity IV Score") +
-  theme_bw() +
-  theme(plot.title = element_text(hjust = 0.5),
-    axis.title.x=element_blank(),
-    axis.text.x=element_blank(),
-    axis.ticks.x=element_blank(),
-    panel.grid.major.x = element_blank(),
-    panel.grid.minor.x = element_blank())
-```
+#### ii {#bii}
+To have a good understand I decided to start with the region and after
+create one per country with more datapoints.
 
 ```{r politiv-per-region-plot, dev='png'}
 ggplot(df_world_small, aes(y = polityIV, x = region)) +
@@ -366,12 +355,26 @@ ggplot(df_world_small, aes(y = polityIV, x = region)) +
     axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
 ```
 
-#### iii
+We can also do the chart per country but has too much detail. So I decided
+to install the package plotly to have a interactive visualization.
+I also decide to reorder the x-axis by polityIV to simplify the visualization.
 
-To find the region with the biggest GDP per Capita we need to do the following
-- 1. we need to find the maximum value and the corresponding index `which.max(df_world_small$gdppcap08)`
-- 2. select the row `df_world_small[which.max(df_world_small$gdppcap08), ]`
-- 3. filter the column region `df_world_small[which.max(df_world_small$gdppcap08), "region"]`
+```{r politiv-per-country-plot, dev='png'}
+if ('plotly' %in% installed.packages() == FALSE) {
+  install.packages('plotly', repos = 'http://cran.us.r-project.org')
+}
+library(plotly, warn.conflicts = FALSE)
+pl <- ggplot(df_world_small, aes(x = reorder(country, polityIV), y = polityIV)) +
+            geom_boxplot() +
+            labs(title = "Polity IV Per Country Scores Chart", x = "Country", y = "Polity IV Score") +
+            theme_bw() +
+            theme(plot.title = element_text(hjust = 0.5), axis.text.x = element_text(angle = 90, hjust = 1)) 
+ggplotly(pl)
+```
+
+#### iii
+By the chart in [(i)](#bi) we can say that the region with the biggest GDP per capita
+is "Middle East". We can confirm finding the maximum *gdppcap08 per region* in the data.
 
 ```{r, echo = TRUE,results='markdown'}
 region_biggest_gdpcap08 <- df_world_small[which.max(df_world_small$gdppcap08), "region"]
@@ -379,25 +382,12 @@ print(region_biggest_gdpcap08)
 ```
 
 #### iv
-
-To find the country with the lowest polityIV Index we need to do the following steps:
-
-- 1. we need to find the minimum polityIV value and the corresponding index `which.min(df_world_small$polityIV)`
-- 2. select the row `df_world_small[which.min(df_world_small$polityIV), ]`
-- 3. filter the column country `df_world_small[which.min(df_world_small$polityIV), "country"]`
-
-To find *all* the countries with the lowest polityIV Index we need to do the following steps:
-
-- 1. we need to find the minimum polityIV value `min(df_world_small$polityIV)`
-- 2. filter all the values corresponding to the value `df_world_small$polityIV == min(df_world_small$polityIV)`
-- 3. select the corresponding rows `df_world_small[df_world_small$polityIV == min(df_world_small$polityIV), ]`
-- 4. filter the column country `df_world_small[df_world_small$polityIV == min(df_world_small$polityIV), "country"]`
+By the chart in [(ii) - Polit IV per Country Scores chart](#bii) if we zoom it in 
+the beggining at the *x-axis*,we can tell that the countries with lower polityiv 
+are *Qatar* and *Saudi Arabia*
 
 ```{r, echo = TRUE,results='markdown'}
-country_with_min_polityiv <- df_world_small[which.min(df_world_small$polityIV), "country"]
 countries_with_min_polityiv <- df_world_small[df_world_small$polityIV == min(df_world_small$polityIV), "country"]
-
-print(country_with_min_polityiv)
 print(countries_with_min_polityiv)
 ```
 

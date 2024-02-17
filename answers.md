@@ -52,7 +52,7 @@ Normal distribution Table
 Z score acummulated value for the value 0.39 = .09772
 So bigger than 0.39 is 1 - 0.9772 = 0.0228
 
-In 100 beers we have the probability of 100 * 0.0228 = 2.28 bottles to contain more than 0.39L.
+In 100 bottles we have the probability of 100 * 0.0228 = 2.28 bottles to contain more than 0.39L.
 
 ## 2. Descriptive statistics (6 marks)
 Use the `salary.rds` dataset from the lecture 1
@@ -124,7 +124,7 @@ lowest :  1  2  3  4  5, highest: 30 31 32 33 35
 ------------------------------------------------------------------------------------------------------------------------------------
 salary 
        n  missing distinct     Info     Mean      Gmd      .05      .10      .25      .50      .75      .90      .95 
-      52        0       51        1    23798     6755    16125    16519    18247    23719    27258    31903    34440 
+      52        0       51        1    23798     6755    1 6125    16519    18247    23719    27258    31903    34440 
 
 lowest : 15000 15350 16094 16150 16244, highest: 32850 33696 35350 36350 38045
 ------------------------------------------------------------------------------------------------------------------------------------
@@ -290,16 +290,16 @@ it preserves the units of the variable and facilitates easier comprehension.
 
 ### Question F
 Load *HairEyeColor* dataset into workspace.
+
 *Hint: dataHairEye <- as.data.frame(HairEyeColor)*
 
-f. As a cutomer, I would like to know the total number of people with various
+f. As a customer, I would like to know the total number of people with various
 color combination of hair and eyes. Which chart suits best for this task? 
 Plot the same. (1 mark)
 #### Answer F
 
-For this dataset we are counting the value of *two categorical* variables so 
-we need to find a way to see this two variables and how they correlate with 
-other.
+For this dataset we are counting the value of *two categorical* variables, so 
+we need to find a way to see this two variables and how they correlate each other.
 
 Initially, I considered a *heatmap* or a chart 
 *count overlapping points*. However, I encountered difficulties in 

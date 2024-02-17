@@ -155,7 +155,7 @@ library(Hmisc, warn.conflicts = FALSE)
 library(pastecs, warn.conflicts = FALSE)
 library(psych, warn.conflicts = FALSE)
 
-salary<-readRDS("data/salary.rds")
+salary <- readRDS("data/salary.rds")
 
 description.Hmisc <- Hmisc::describe(salary)
 description.pastecs <- pastecs::stat.desc(salary)
@@ -243,9 +243,7 @@ Plot the same. (1 mark)
 For this dataset we are counting the value of *two categorical* variables, so 
 we need to find a way to see this two variables and how they correlate each other.
 
-Initially, I considered a *heatmap* or a chart 
-*count overlapping points*. However, I encountered difficulties in 
-thoroughly examining the data.
+I think that the *geom_point* labelled with *geom_text* is the chart that suits best.
 
 ```{r hair-eye-two-var-plot, dev='png'}
 if ('ggplot2' %in% installed.packages() == FALSE) {
@@ -256,29 +254,16 @@ library(ggplot2, warn.conflicts = FALSE)
 
 data(HairEyeColor)
 dataHairEye <- as.data.frame(HairEyeColor)
+dataHairEye.aggregated <- aggregate(Freq ~ Hair + Eye, data = dataHairEye, FUN = sum)
 
-ggplot(data = dataHairEye, aes(x = Hair, y=Eye, weight = Freq)) + 
-geom_count() + ggtitle("Hair and Eye Color Total") + 
+ggplot(data = dataHairEye.aggregated, aes(x = Hair, y = Eye, size = Freq)) + 
+geom_point(color = "black") + 
+scale_size_continuous(range = c(5, 30), guide = "none") + 
+ggtitle("Hair and Eye Color Combinations") + 
+geom_text(aes(label = Freq), size = 4, color="white") +
 theme_bw() + 
 theme(plot.title = element_text(hjust = 0.5)) 
 ```
-
-As you can observe, distinguishing between the values of "Brown Hair - Blue Eye"
-and "Black Hair - Brown Eye" isn't straightforward.
-
-Therefore, I opted for a bar plot. In this plot, hair color is 
-represented on the *x-axis*, with each bar representing a different 
-*eye color category value* plotted side by side on the *y-axis*.
-
-```{r hair-eye-plot, dev='png'}
-ggplot(data = dataHairEye, aes(x = Hair, weight = Freq)) + 
-geom_bar(aes(fill = Eye), position = 'dodge') + 
-ggtitle("Hair and Eye Color Total") + 
-ylab("Number of People") + 
-theme(plot.title = element_text(hjust = 0.5))
-```
-
-So I think that the bar-plot chart is the best representation for this data.
 
 # 3. Visualization (6 marks)
 
